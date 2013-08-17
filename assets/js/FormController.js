@@ -3,8 +3,9 @@ angular
 
 function FormController($scope) {
   var ids = 0;
-  var persist = new Persist.Store("grades")
-  
+  //var persist = new Persist.Store("grades")
+  var students = $scope.students = createInitialStudents();
+
   var scoring = $scope.scoring = {
     max:100,
     extra:0,
@@ -16,28 +17,26 @@ function FormController($scope) {
   };
 
   function createInitialStudents() {
-    var id = newId();
-    var students = {};
-    students[id] = {
+    return [{
       id: newId(),
       name: 'John Smith',
       score: 98
-    };
-    return students;
+    }];
   };
 
-  var students = $scope.students = createInitialStudents();
-
   $scope.addStudent = function() {
-   var newStudent = {
+    students.push({
       id:newId(),
       name:"New Student",
       score:0
-    };
-    students[newStudent.id] = newStudent;
+    });
   };
 
-  $scope.removeStudent = function(id) {
-    delete $scope.students[id]
+  $scope.removeStudent = function( student ) {
+    for (var i = 0, ii = students.length; i < ii; i++) {
+      if (student.id === students[i].id) {
+        $scope.students.splice(i, 1);
+      }
+    }
   };
 };
