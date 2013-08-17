@@ -34,6 +34,20 @@ localStorage:
 	IE v8+, FF v21+, Chrome v27+, Safari v5.1+, Opera v15+, iOS Safari v3.2+,
 	Opera Mini (none), Android Browser v2.1+, Blackbeary Browser v7.0
 
+numerals.js
+
+jsUri.js
+https://github.com/derek-watson/jsUri
+
+jsStats.js
+http://www.javascriptstats.com/
+
+persist.js
+http://hg.pablotron.org/persist-js
+
+moment.js
+http://momentjs.com/
+
 Tests:
 ======
 
