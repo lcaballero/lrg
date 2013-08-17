@@ -35,6 +35,7 @@ localStorage:
 	Opera Mini (none), Android Browser v2.1+, Blackbeary Browser v7.0
 
 numerals.js
+http://numeraljs.com/
 
 jsUri.js
 https://github.com/derek-watson/jsUri
