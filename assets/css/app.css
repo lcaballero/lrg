@@ -5,3 +5,8 @@
 .students > div+div {
 	margin-top:8px;
 }
+body > div {
+	margin:0px auto;
+	width:980px;
+	margin-top:20px;
+}

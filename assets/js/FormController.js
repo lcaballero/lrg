@@ -3,15 +3,27 @@ angular
 
 function FormController($scope) {
   var ids = 0;
-  //var persist = new Persist.Store("grades")
-  var students = $scope.students = createInitialStudents();
 
-  var scoring = $scope.scoring = {
+  var assignments = $scope.assignment = {
+    students: createInitialStudents(),
     max:100,
     extra:0,
-    assignment:"Homework 1"
+    name  :"Homework 1"
   };
 
+  //var persist = new Persist.Store("grades")
+  var students = $scope.assignment.students;
+  var scoring = $scope.assignment.scoring;
+  var uri = new Uri(location.href);
+
+  var debug = uri.getQueryParamValue("..debug..");
+
+  $scope.debug = (debug == "1" ||
+    debug == "on" ||
+    debug == "true" ||
+    debug == "y" ||
+    debug == "yes");
+  
   function newId() {
     return "id-" + (String(++ids));
   };
@@ -32,10 +44,22 @@ function FormController($scope) {
     });
   };
 
+  $scope.percentScore = function( score ) {
+    console.log("percentScore", score)
+    if (isNaN(Number(score)) || isNaN(Number(assignments.max))) {
+      return "";
+    }
+
+    var ratio = score / assignments.max;
+    var pct = numeral(ratio).format("0.00%")
+
+    return pct;
+  }
+
   $scope.removeStudent = function( student ) {
     for (var i = 0, ii = students.length; i < ii; i++) {
       if (student.id === students[i].id) {
-        $scope.students.splice(i, 1);
+        students.splice(i, 1);
       }
     }
   };

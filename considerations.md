@@ -9,9 +9,12 @@ then the possible values are [0-100] with extra credit being a separate field.
 
 Nice to haves (given my time constraints):
 ==========================================
-Statistics JS Package to calculate some interesting scoring stats.
-Graphic depiction of the distribution
-Validation of the form given default names.
+1. Statistics JS Package to calculate some interesting scoring stats.
+2. Graphic depiction of the distribution
+3. Validation of the form given default names.
+4. Add instruction bubbles explain validations.
+5. Calculate % from Max and Score.
+6. 
 
 Requirements:
 =============
@@ -30,4 +33,19 @@ Dependencies:
 localStorage:
 	IE v8+, FF v21+, Chrome v27+, Safari v5.1+, Opera v15+, iOS Safari v3.2+,
 	Opera Mini (none), Android Browser v2.1+, Blackbeary Browser v7.0
+
+Tests:
+======
+
+_Initial State_
+No data found => 1 default student
+No data found => id + name + grade != undefined
+No data found => id + name + grade == default values
+No data found => 
+
+Calc % grade => if max is 0 then no division by 0
+Calc % grade => if no students then calc should fail safe
+
+Validatation => score is between [min...max+extra]
+			=> then show bubble
 

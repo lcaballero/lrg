@@ -22,4 +22,17 @@ angular.module('gradingFilters', []).filter('averageScore',
     return function(student) {
       return student.score < 65 ? "low-score" : "";
     }
+  })
+.filter('percentScore',
+  function() {
+    return function(assignment, student) {
+      if (isNaN(Number(assignment.max))) {
+        return "";
+      }
+      if (isNaN(Number(student.score))) {
+        return "";
+      }
+
+      return student.score / assignment.max;
+    }
   });
