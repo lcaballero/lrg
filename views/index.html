@@ -1,0 +1,50 @@
+<!doctype html>
+<html ng-app="App">
+  <head>
+    <title>Grades</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/assets/css/app.css"/>
+    <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/assets/js/persist.js"></script>
+    <script type="text/javascript" src="/assets/js/angular.min.js"></script>
+    <script type="text/javascript" src="/assets/js/FormController.js"></script>
+    <script type="text/javascript" src="/assets/js/Filters.js"></script>
+  </head>
+  <body>
+    <div ng-controller="FormController">
+      <fieldset class="scoring">
+        <label>Assignment Rubrick:</label>
+        <div>
+          <input type="text" ng-model="scoring.assignment" required>
+          <input type="text" ng-model="scoring.max" required>
+          <input type="text" ng-model="scoring.extra" required>
+        </div>
+      </fieldset>
+      <br/>
+      <fieldset class="students">
+        <label>Students:</label>
+        [ <a href="" ng-click="addStudent()">add</a> ]
+        <div ng-repeat="(id, student) in students">
+          <div class="{{student | highlightLowScore}}">
+            <input type="text" ng-model="student.id" required>
+            <input type="text" ng-model="student.name" required>
+            <input type="text" ng-model="student.score" required>
+            <span>[ <a href="" ng-click="removeStudent(id)">X</a> ]</span>
+          </div>
+        </div>
+      </fieldset>
+      <br/>
+      <div class="stats">
+        <b>Stats</b>
+        <dl>
+          <dt>Average</dt>
+          <dd>{{students | averageScore}}</dd>
+        </dl>
+      </div>
+
+      <hr/>
+      Debug View:
+      <pre>Students={{students | json}}</pre>
+    </div>
+  </body>
+</html>

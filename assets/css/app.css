@@ -1,0 +1,7 @@
+.low-score input[type='text'] {
+	background-color:#ee0000;
+	color:white;
+}
+.students > div+div {
+	margin-top:8px;
+}
