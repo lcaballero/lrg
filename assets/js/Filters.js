@@ -1,31 +1,13 @@
-angular.module('gradingFilters', []).filter('averageScore',
-  function() {
-    return function(students) {
-      var total = 0;
-      var counted = 0;
-
-      for (var id in students) {
-
-        var score = Number(students[id].score);
-
-        if (!isNaN(score)) {
-          total += score;
-          counted++;
-        }
-      }
-
-      return total / counted;
-    }
-  })
+angular.module('gradingFilters', [])
 .filter('highlightLowScore',
   function() {
     return function(student) {
       return student.score < 65 ? "low-score" : "";
     }
   })
-.filter('percentScore',
+.filter('scorePercent',
   function() {
-    return function(assignment, student) {
+    return function(student, assignment) {
       if (isNaN(Number(assignment.max))) {
         return "";
       }
@@ -34,5 +16,73 @@ angular.module('gradingFilters', []).filter('averageScore',
       }
 
       return student.score / assignment.max;
+    }
+  })
+.filter('number',
+  function() {
+    return function(val) {
+      val = Number(val)
+      if (isNaN(val)) {
+        return "";
+      }
+      return numeral(val).format("0.00");
+    }
+  })
+.filter('pct',
+  function() {
+    return function(val) {
+      val = Number(val)
+      if (isNaN(val)) {
+        return "";
+      }
+      return numeral(val).format("0.00%");
+    }
+  })
+.filter('mean',
+  function() {
+    return function(assignment) {
+      return jsStats.mean(assignment.scores());
+    }
+  })
+.filter('median',
+  function() {
+    return function(assignment) {
+      return jsStats.median(assignment.scores());
+    }
+  })
+.filter('mode',
+  function() {
+    return function(assignment) {
+      return jsStats.mode(assignment.scores());
+    }
+  })
+.filter('min',
+  function() {
+    return function(assignment) {
+      return jsStats.min(assignment.scores());
+    }
+  })
+.filter('max',
+  function() {
+    return function(assignment) {
+      return jsStats.min(assignment.scores());
+    }
+  })
+.filter('variance',
+  function() {
+    return function(assignment) {
+      return jsStats.variance(assignment.scores());
+    }
+  })
+.filter('variance',
+  function() {
+    return function(assignment) {
+      return jsStats.variance(assignment.scores());
+    }
+  })
+.filter('standardDeviation',
+  function() {
+    return function(assignment) {
+      return jsStats.standardDeviation(assignment.scores());
     }
   });

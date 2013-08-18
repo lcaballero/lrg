@@ -7,6 +7,7 @@
     <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="/assets/js/numeral.js"></script>
     <script type="text/javascript" src="/assets/js/uri.js"></script>
+    <script type="text/javascript" src="/assets/js/jsStat.js"></script>
     <!-- <script type="text/javascript" src="/assets/js/persist.js"></script> -->
     <script type="text/javascript" src="/assets/js/angular.min.js"></script>
     <script type="text/javascript" src="/assets/js/FormController.js"></script>
@@ -31,22 +32,50 @@
             <input ng-show="debug" type="text" ng-model="student.id" required>
             <input type="text" ng-model="student.name" required>
             <input type="text" ng-model="student.score" required>
-            <span>{{percentScore(student.score)}}</span>
+            <span>{{student | scorePercent:assignment}}</span>
             <span>[ <a href="" ng-click="removeStudent(student)">X</a> ]</span>
           </div>
         </div>
       </fieldset>
       <br/>
       <div class="stats">
-        <b>Stats</b>
         <dl>
-          <dt>Average</dt>
-          <dd>{{assignment.students | averageScore}}</dd>
+          <dt>Stats:</dt>
+          <dd>
+            <dl>
+              <dt>Mean:</dt>
+              <dd>{{assignment | mean | number}}</dd>
+            </dl>
+            <dl>
+              <dt>Median:</dt>
+              <dd>{{assignment | median | number}}</dd>
+            </dl>
+            <dl>
+              <dt>Mode:</dt>
+              <dd>{{assignment | mode}}</dd>
+            </dl>
+            <dl>
+              <dt>Min:</dt>
+              <dd>{{assignment | min}}</dd>
+            </dl>
+            <dl>
+              <dt>Max:</dt>
+              <dd>{{assignment | max}}</dd>
+            </dl>
+            <dl>
+              <dt>Variance:</dt>
+              <dd>{{assignment | variance | pct}}</dd>
+            </dl>
+            <dl>
+              <dt>Standard Deviation:</dt>
+              <dd>{{assignment | standardDeviation | pct}}</dd>
+            </dl>
+          </dd>
         </dl>
       </div>
       <hr/>
       Debug View:
-      <pre>Students={{assignment.students | json}}</pre>
+      <pre>Students={{assignment | json}}</pre>
     </div>
   </body>
 </html>

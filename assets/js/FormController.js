@@ -8,7 +8,18 @@ function FormController($scope) {
     students: createInitialStudents(),
     max:100,
     extra:0,
-    name  :"Homework 1"
+    name  :"Homework 1",
+    scores:function() {
+      var s = [];
+      var students = this.students;
+      for (var i = 0, n = students.length; i < n; i++) {
+        var score = Number(students[i].score); 
+        if (!isNaN(score)) {
+          s.push(score);
+        }
+      }
+      return s;
+    }
   };
 
   //var persist = new Persist.Store("grades")
@@ -32,7 +43,7 @@ function FormController($scope) {
     return [{
       id: newId(),
       name: 'John Smith',
-      score: 98
+      score: "98"
     }];
   };
 
@@ -40,7 +51,7 @@ function FormController($scope) {
     students.push({
       id:newId(),
       name:"New Student",
-      score:0
+      score:"0"
     });
   };
 
