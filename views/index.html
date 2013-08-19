@@ -16,8 +16,9 @@
   </head>
   <body>
     <div ng-controller="FormController">
-      <div ng-keypress="cssRefresh()" tabindex="0">
-        <fieldset class="scoring">
+      <h1>{{$storage.name}}</h1>
+      <form>
+        <fieldset class="scoring" ng-show="debug">
           <label>Assignment Rubrick:</label>
           <div>
             <input type="text" ng-model="$storage.name" required>
@@ -29,11 +30,11 @@
         <fieldset class="students">
           <label>Students:</label>
           [ <a href="" ng-click="addStudent()">add</a> ]
-          <div ng-repeat="student in $storage.students">
+          <div ng-repeat="student in clonedStudents">
             <div class="{{student | highlightLowScore}}">
               <input ng-show="debug" type="text" ng-model="student.id" required>
-              <input type="text" ng-model="student.name" required>
-              <input type="text" ng-model="student.score" required>
+              <input type="text" ng-model="student.name" ng-blur="blurStudent()" required>
+              <input type="text" ng-model="student.score" ng-blur="blurStudent()" required>
               <span>{{student | scorePercent:$storage}}</span>
               <span>[ <a href="" ng-click="removeStudent(student)">X</a> ]</span>
             </div>
@@ -42,19 +43,11 @@
         <br/>
         <div class="stats">
           <dl>
-            <dt>Stats:</dt>
+            <dt>Statistics:</dt>
             <dd>
               <dl>
-                <dt>Mean:</dt>
+                <dt>Average:</dt>
                 <dd>{{$storage | scores | mean | number}}</dd>
-              </dl>
-              <dl>
-                <dt>Median:</dt>
-                <dd>{{$storage | scores | median | number}}</dd>
-              </dl>
-              <dl>
-                <dt>Mode:</dt>
-                <dd>{{$storage | scores | mode}}</dd>
               </dl>
               <dl>
                 <dt>Min:</dt>
@@ -64,18 +57,9 @@
                 <dt>Max:</dt>
                 <dd>{{$storage | scores | max}}</dd>
               </dl>
-              <dl>
-                <dt>Variance:</dt>
-                <dd>{{$storage | scores | variance | pct}}</dd>
-              </dl>
-              <dl>
-                <dt>Standard Deviation:</dt>
-                <dd>{{$storage | scores | standardDeviation | pct}}</dd>
-              </dl>
             </dd>
           </dl>
         </div>
-        <hr/>
         <div ng-show="debug">
           <dl>
             <dt>Debug View:</dt>
@@ -84,7 +68,7 @@
             </dd>
           </dl>
         </div>
-      </div>
+      </form>
     </div>
   </body>
 </html>

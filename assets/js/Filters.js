@@ -2,20 +2,26 @@ angular.module('gradingFilters', [])
 .filter('highlightLowScore',
   function() {
     return function(student) {
-      return student.score < 65 ? "low-score" : "";
+      var score = Number(student.score);
+      if (isNaN(score)) {
+        return "";
+      }
+      return score < 65 ? "low-score" : "";
     }
   })
 .filter('scores',
   function() {
     return function(assignment) {
-      return [1];
-      if (assignment == null || assignment.students == null || !assignment.students.length) {
+      if (!assignment && !assignment.students && !assignment.students.length) {
         return [];
       }
       var rv = [];
       var students = assignment.students;
       for (var i = 0, n = students.length; i < n; i++) {
-        rv.push(students[i].score);
+        var v = Number(students[i].score);
+        if (!isNaN(v)) {
+          rv.push(v);
+        }
       }
       return rv;
     }
@@ -80,7 +86,7 @@ angular.module('gradingFilters', [])
 .filter('max',
   function() {
     return function(scores) {
-      return jsStats.min(scores);
+      return jsStats.max(scores);
     }
   })
 .filter('variance',
@@ -92,12 +98,14 @@ angular.module('gradingFilters', [])
 .filter('variance',
   function() {
     return function(scores) {
+      console.log(scores);
       return jsStats.variance(scores);
     }
   })
 .filter('standardDeviation',
   function() {
     return function(scores) {
+      console.log(scores);
       return jsStats.standardDeviation(scores);
     }
   });

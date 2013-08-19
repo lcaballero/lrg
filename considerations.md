@@ -72,3 +72,5 @@ Calc % grade => if no students then calc should fail safe
 Validatation => score is between [min...max+extra]
 			=> then show bubble
 
+Requirements Question:
+======================

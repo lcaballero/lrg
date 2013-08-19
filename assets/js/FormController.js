@@ -15,12 +15,6 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
     var DEFAULT_EXTRA_CREDIT = 0;
     var DEFAULT_INITIAL_ID = 1;  // 0 is falsy -- don't use that.
 
-    // $(document.window).bind(
-    //     "keypress",
-    //     function() {
-    //       console.log("here");
-    //     })
-
     var ids = DEFAULT_INITIAL_ID;
     var defaults = {
       students: [{
@@ -35,6 +29,7 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
     };
 
     $scope.$storage = $localStorage.$default(defaults);
+    $scope.clonedStudents = cloneStudents();
 
     // TODO: make this into a service/filter
     var search = $location.search()
@@ -52,30 +47,39 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
         name:"New Student",
         score:"0"
       });
+      $scope.clonedStudents = cloneStudents();
     };
 
     $scope.removeStudent = function( student ) {
+      var students = $scope.$storage.students;
+ 
       for (var i = 0, ii = students.length; i < ii; i++) {
         if (student.id === students[i].id) {
           students.splice(i, 1);
+          break;
         }
       }
+      $scope.clonedStudents = cloneStudents(students);
     };
 
-    $scope.cssRefresh = function(){
-      var a=document.getElementsByTagName('link');
-      var z=/stylesheet/i;var x=/[?&]cssrefresh=\d+/;
-      var y=/cssrefresh=\d+/;
-      var w=/[?]/;var n=(new Date().valueOf());
-      for(var i=0;i<a.length;i++){
-        var s=a[i];
-        if(!s.href||!z.test(s.rel)){
-          continue;
-        }
-        s.href=x.test(s.href)
-          ? s.href.replace(y,"cssrefresh="+n)
-          : (w.test(s.href)?s.href+"&cssrefresh="+n:s.href+"?cssrefresh="+n);
+    function cloneStudents(students) {
+      var clone = [];
+      students = students || $scope.$storage.students;
+
+      for (var i = 0, n = students.length; i < n; i++) {
+        clone.push({
+          id: students[i].id,
+          name: students[i].name || "New Student",
+          score: students[i].score
+        })
       }
+      return clone;
     };
+
+    $scope.blurStudent = function() {
+      console.log("blur student");
+      console.log($scope.clonedStudents);
+      $scope.$storage.students = cloneStudents($scope.clonedStudents);
+    }
 
   }]);
