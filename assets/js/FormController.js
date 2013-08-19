@@ -1,125 +1,81 @@
-angular
-  .module('App', ['gradingFilters']);
+angular.module('App', ['gradingFilters', 'ngStorage'])
+.config(
+  function($locationProvider) {
+    $locationProvider.html5Mode(true);
+  })
+.controller('FormController', [
+  '$scope', '$location', '$localStorage',
+  /**
+   * Begin Controller
+   */
+  function($scope, $location, $localStorage) {
+    var DEFAULT_LOCAL_STORE_KEY = 'assignments';
+    var DEFAULT_ASSIGNMENT_NAME = "Homework 1";
+    var DEFAULT_MAX_SCORE = 100;
+    var DEFAULT_EXTRA_CREDIT = 0;
+    var DEFAULT_INITIAL_ID = 1;  // 0 is falsy -- don't use that.
 
-function FormController($scope) {
-  var DEFAULT_LOCAL_STORE_KEY = 'assignments';
-  var DEFAULT_ASSIGNMENT_NAME = "Homework 1";
-  var DEFAULT_MAX_SCORE = 100;
-  var DEFAULT_EXTRA_CREDIT = 0;
-  var persist = null; // Lazily created with dataStore(key)
+    // $(document.window).bind(
+    //     "keypress",
+    //     function() {
+    //       console.log("here");
+    //     })
 
-  var assignment = loadAssignments(
-    DEFAULT_LOCAL_STORE_KEY, DEFAULT_ASSIGNMENT_NAME);
-
-  console.log({
-    persist:persist,
-    assignment:assignment
-  });
-
-  var ids = 0;
-  $scope.assignment = assignment;
-  var students = $scope.assignment.students;
-  var scoring = $scope.assignment.scoring;
-  var uri = new Uri(location.href);
-  var debug = uri.getQueryParamValue("..debug..");
-  $scope.debug = !!({"1":1, "on":1, "true":1, "y":1, "yes":1}[debug]);
-
-  function dataStore(key) {
-    var key = key || DEFAULT_LOCAL_STORE_KEY;
-    persist = persist || (new Persist.Store(key));
-    return persist;
-  };
-
-  function loadAssignments(key, name) {
-    var name = name || DEFAULT_ASSIGNMENT_NAME;
-    var data = dataStore(key).get(name);
-
-    // TODO: add ability to reset the data store.
-    data = data || createDefaultAssignment(key, name);
-
-    // TODO: change addScoresFn to a filter
-    data = addScoresFn(data);
-
-    return data;
-  };
-
-  function createDefaultAssignment(key, name) {
+    var ids = DEFAULT_INITIAL_ID;
     var defaults = {
-      students: createInitialStudents(),
-      max:100,
-      extra:0,
+      students: [{
+        id: newId(DEFAULT_INITIAL_ID),
+        name: 'John Smith',
+        score: "98"
+      }],
+      max: 100,
+      extra: 0,
+      lastId: DEFAULT_INITIAL_ID,
       name: DEFAULT_ASSIGNMENT_NAME
     };
 
-    var json = angular.toJson(defaults);
-    dataStore(key).set(name, json);
-    var data = null;
-    dataStore(key).get(name, function(ok, val) {
-      if (ok) {
-        data = angular.fromJson(val);
-      } else {
-        console.log(ok, val);
-      }
-    });
-    console.log({ key:key, name:name, data:data, json:json, defaults:defaults });
-    return data;
-  };
+    $scope.$storage = $localStorage.$default(defaults);
 
-  // TODO: change this to a filter.
-  function addScoresFn( assignments ) {
-      var scores = function() {
-        var s = [];
-        var students = this.students;
-        for (var i = 0, n = students.length; i < n; i++) {
-          var score = Number(students[i].score); 
-          if (!isNaN(score)) {
-            s.push(score);
-          }
+    // TODO: make this into a service/filter
+    var search = $location.search()
+    var debug = search["..debug.."]
+    $scope.debug = !!({"1":1, "on":1, "true":1, "y":1, "yes":1}[debug]);
+    
+    function newId( initial ) {
+      var id = initial || (++$scope.$storage.lastId);
+      return "id-" + (String(id));
+    };
+
+    $scope.addStudent = function() {
+      $scope.$storage.students.push({
+        id:newId(),
+        name:"New Student",
+        score:"0"
+      });
+    };
+
+    $scope.removeStudent = function( student ) {
+      for (var i = 0, ii = students.length; i < ii; i++) {
+        if (student.id === students[i].id) {
+          students.splice(i, 1);
         }
-        return s;
-      };
-
-      assignments.scores = scores;
-      return assignments;
-  };
-  
-  function newId() {
-    return "id-" + (String(++ids));
-  };
-
-  function createInitialStudents() {
-    return [{
-      id: newId(),
-      name: 'John Smith',
-      score: "98"
-    }];
-  };
-
-  $scope.addStudent = function() {
-    students.push({
-      id:newId(),
-      name:"New Student",
-      score:"0"
-    });
-  };
-
-  $scope.percentScore = function( score ) {
-    console.log("percentScore", score)
-    if (isNaN(Number(score)) || isNaN(Number(assignments.max))) {
-      return "";
-    }
-
-    var ratio = score / assignments.max;
-    var pct = numeral(ratio).format("0.00%")
-
-    return pct;
-  }
-
-  $scope.removeStudent = function( student ) {
-    for (var i = 0, ii = students.length; i < ii; i++) {
-      if (student.id === students[i].id) {
-        students.splice(i, 1);
       }
-    }
-  };
-};
+    };
+
+    $scope.cssRefresh = function(){
+      var a=document.getElementsByTagName('link');
+      var z=/stylesheet/i;var x=/[?&]cssrefresh=\d+/;
+      var y=/cssrefresh=\d+/;
+      var w=/[?]/;var n=(new Date().valueOf());
+      for(var i=0;i<a.length;i++){
+        var s=a[i];
+        if(!s.href||!z.test(s.rel)){
+          continue;
+        }
+        s.href=x.test(s.href)
+          ? s.href.replace(y,"cssrefresh="+n)
+          : (w.test(s.href)?s.href+"&cssrefresh="+n:s.href+"?cssrefresh="+n);
+      }
+    };
+
+  }]);

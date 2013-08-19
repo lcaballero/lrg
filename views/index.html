@@ -4,78 +4,87 @@
     <title>Grades</title>
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/assets/css/app.css"/>
-    <script type="text/javascript" src="/assets/js/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript" src="/assets/js/numeral.js"></script>
-    <script type="text/javascript" src="/assets/js/uri.js"></script>
+
     <script type="text/javascript" src="/assets/js/jsStat.js"></script>
-    <script type="text/javascript" src="/assets/js/persist.js"></script>
+    <script type="text/javascript" src="/assets/js/numeral.js"></script>
+
     <script type="text/javascript" src="/assets/js/angular.min.js"></script>
+    <script type="text/javascript" src="/assets/js/ngStorage.js"></script>
+
     <script type="text/javascript" src="/assets/js/FormController.js"></script>
     <script type="text/javascript" src="/assets/js/Filters.js"></script>
   </head>
   <body>
     <div ng-controller="FormController">
-      <fieldset class="scoring">
-        <label>Assignment Rubrick:</label>
-        <div>
-          <input type="text" ng-model="assignment.name" required>
-          <input type="text" ng-model="assignment.max" required>
-          <input type="text" ng-model="assignment.extra" required>
-        </div>
-      </fieldset>
-      <br/>
-      <fieldset class="students">
-        <label>Students:</label>
-        [ <a href="" ng-click="addStudent()">add</a> ]
-        <div ng-repeat="student in assignment.students">
-          <div class="{{student | highlightLowScore}}">
-            <input ng-show="debug" type="text" ng-model="student.id" required>
-            <input type="text" ng-model="student.name" required>
-            <input type="text" ng-model="student.score" required>
-            <span>{{student | scorePercent:assignment}}</span>
-            <span>[ <a href="" ng-click="removeStudent(student)">X</a> ]</span>
+      <div ng-keypress="cssRefresh()" tabindex="0">
+        <fieldset class="scoring">
+          <label>Assignment Rubrick:</label>
+          <div>
+            <input type="text" ng-model="$storage.name" required>
+            <input type="text" ng-model="$storage.max" required>
+            <input type="text" ng-model="$storage.extra" required>
           </div>
+        </fieldset>
+        <br/>
+        <fieldset class="students">
+          <label>Students:</label>
+          [ <a href="" ng-click="addStudent()">add</a> ]
+          <div ng-repeat="student in $storage.students">
+            <div class="{{student | highlightLowScore}}">
+              <input ng-show="debug" type="text" ng-model="student.id" required>
+              <input type="text" ng-model="student.name" required>
+              <input type="text" ng-model="student.score" required>
+              <span>{{student | scorePercent:$storage}}</span>
+              <span>[ <a href="" ng-click="removeStudent(student)">X</a> ]</span>
+            </div>
+          </div>
+        </fieldset>
+        <br/>
+        <div class="stats">
+          <dl>
+            <dt>Stats:</dt>
+            <dd>
+              <dl>
+                <dt>Mean:</dt>
+                <dd>{{$storage | scores | mean | number}}</dd>
+              </dl>
+              <dl>
+                <dt>Median:</dt>
+                <dd>{{$storage | scores | median | number}}</dd>
+              </dl>
+              <dl>
+                <dt>Mode:</dt>
+                <dd>{{$storage | scores | mode}}</dd>
+              </dl>
+              <dl>
+                <dt>Min:</dt>
+                <dd>{{$storage | scores | min}}</dd>
+              </dl>
+              <dl>
+                <dt>Max:</dt>
+                <dd>{{$storage | scores | max}}</dd>
+              </dl>
+              <dl>
+                <dt>Variance:</dt>
+                <dd>{{$storage | scores | variance | pct}}</dd>
+              </dl>
+              <dl>
+                <dt>Standard Deviation:</dt>
+                <dd>{{$storage | scores | standardDeviation | pct}}</dd>
+              </dl>
+            </dd>
+          </dl>
         </div>
-      </fieldset>
-      <br/>
-      <div class="stats">
-        <dl>
-          <dt>Stats:</dt>
-          <dd>
-            <dl>
-              <dt>Mean:</dt>
-              <dd>{{assignment | mean | number}}</dd>
-            </dl>
-            <dl>
-              <dt>Median:</dt>
-              <dd>{{assignment | median | number}}</dd>
-            </dl>
-            <dl>
-              <dt>Mode:</dt>
-              <dd>{{assignment | mode}}</dd>
-            </dl>
-            <dl>
-              <dt>Min:</dt>
-              <dd>{{assignment | min}}</dd>
-            </dl>
-            <dl>
-              <dt>Max:</dt>
-              <dd>{{assignment | max}}</dd>
-            </dl>
-            <dl>
-              <dt>Variance:</dt>
-              <dd>{{assignment | variance | pct}}</dd>
-            </dl>
-            <dl>
-              <dt>Standard Deviation:</dt>
-              <dd>{{assignment | standardDeviation | pct}}</dd>
-            </dl>
-          </dd>
-        </dl>
+        <hr/>
+        <div ng-show="debug">
+          <dl>
+            <dt>Debug View:</dt>
+            <dd>
+              <pre>Students={{$storage | json}}</pre>
+            </dd>
+          </dl>
+        </div>
       </div>
-      <hr/>
-      Debug View:
-      <pre>Students={{assignment | json}}</pre>
     </div>
   </body>
 </html>
