@@ -1,4 +1,29 @@
 angular.module('App', ['gradingFilters', 'ngStorage'])
+.directive("focusNewStudent",
+  function($timeout) {
+    return {
+      link: function(scope, element, attr) {
+
+        if (!scope.isAddingStudents) {
+          return;
+        }
+
+        // unless this is the last student in the list aka. just added, or on
+        // page load the last student in the list, then we can skip trying to
+        // obtain focus for that student.
+        if (!scope.student.isLast) {
+          return;
+        }
+
+        $timeout(
+          function() {
+            if (scope.student.isLast) {
+              element[0].focus();
+            }        
+          })
+      }
+    }
+  })
 .config(
   function($locationProvider) {
     $locationProvider.html5Mode(true);
@@ -28,6 +53,7 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
       name: DEFAULT_ASSIGNMENT_NAME
     };
 
+    $scope.isAddingStudents = false;
     $scope.$storage = $localStorage.$default(defaults);
     $scope.clonedStudents = cloneStudents();
 
@@ -42,12 +68,14 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
     };
 
     $scope.addStudent = function() {
-      $scope.$storage.students.push({
+      $scope.isAddingStudents = true;
+      var newStudent = {
         id:newId(),
-        name:"New Student",
-        score:"0"
-      });
-      $scope.clonedStudents = cloneStudents();
+        name:"",
+        score:"100"
+      };
+      $scope.$storage.students.push(newStudent);
+      $scope.clonedStudents = cloneStudents($scope.$storage.students);
     };
 
     $scope.removeStudent = function( student ) {
@@ -69,17 +97,21 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
       for (var i = 0, n = students.length; i < n; i++) {
         clone.push({
           id: students[i].id,
-          name: students[i].name || "New Student",
+          name: students[i].name || "",
           score: students[i].score
         })
       }
       return clone;
     };
 
-    $scope.blurStudent = function() {
-      console.log("blur student");
-      console.log($scope.clonedStudents);
+    $scope.saveOnBlur = function() {
       $scope.$storage.students = cloneStudents($scope.clonedStudents);
+    };
+
+    $scope.saveOnEnter = function( event ) {
+      if (event.keyCode == 13) {
+        $scope.$storage.students = cloneStudents($scope.clonedStudents);
+      }
     }
 
   }]);

@@ -16,34 +16,56 @@
   </head>
   <body>
     <div ng-controller="FormController">
-      <h1>{{$storage.name}}</h1>
+      <h1>Assignment: '{{$storage.name}}'</h1>
       <form>
         <fieldset class="scoring" ng-show="debug">
-          <label>Assignment Rubrick:</label>
+          <label>Assignment Scoring:</label>
           <div>
             <input type="text" ng-model="$storage.name" required>
             <input type="text" ng-model="$storage.max" required>
             <input type="text" ng-model="$storage.extra" required>
           </div>
         </fieldset>
-        <br/>
         <fieldset class="students">
           <label>Students:</label>
+
           [ <a href="" ng-click="addStudent()">add</a> ]
-          <div ng-repeat="student in clonedStudents">
-            <div class="{{student | highlightLowScore}}">
-              <input ng-show="debug" type="text" ng-model="student.id" required>
-              <input type="text" ng-model="student.name" ng-blur="blurStudent()" required>
-              <input type="text" ng-model="student.score" ng-blur="blurStudent()" required>
-              <span>{{student | scorePercent:$storage}}</span>
-              <span>[ <a href="" ng-click="removeStudent(student)">X</a> ]</span>
-            </div>
-          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name:</th>
+                <th>Score:</th>
+                <th>Remove:</th>
+              </tr>
+            </thead>            
+
+            <tbody ng-repeat="student in clonedStudents">
+              <tr class="{{student | highlightLowScore}}" id="row-{{student.id}}">
+                <td>{{$index}}</td>
+                <td>
+                  <input type="text"
+                    ng-model="student.name"
+                    ng-blur="saveOnBlur()"
+                    id="row-name-{{student.id}}"
+                    focus-new-student="{{student.isLast = $index == clonedStudents.length - 1}}"
+                    required>
+                </td>
+                <td>
+                  <input type="text" ng-model="student.score" ng-blur="saveOnBlur()" id="row-score-{{student.id}}" ng-keypress="saveOnEnter($event)" required>
+                </td>
+                <td>
+                  <span>[ <a href="" ng-click="removeStudent(student)">X</a> ]</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
         </fieldset>
-        <br/>
         <div class="stats">
           <dl>
-            <dt>Statistics:</dt>
+            <dt>Summary:</dt>
             <dd>
               <dl>
                 <dt>Average:</dt>
