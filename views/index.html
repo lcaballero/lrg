@@ -43,7 +43,7 @@
 
             <tbody ng-repeat="student in clonedStudents">
               <tr class="{{student | highlightLowScore}}" id="row-{{student.id}}">
-                <td>{{$index}}</td>
+                <td>{{$index + 1}}</td>
                 <td>
                   <input type="text"
                     ng-model="student.name"

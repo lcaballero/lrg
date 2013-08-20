@@ -1,4 +1,10 @@
 angular.module('App', ['gradingFilters', 'ngStorage'])
+.directive("preventNonNumeric",
+  function() {
+    return {
+
+    };
+  })
 .directive("focusNewStudent",
   function($timeout) {
     return {
@@ -104,6 +110,7 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
       return clone;
     };
 
+    // These probably should be directives instead of scope functions.
     $scope.saveOnBlur = function() {
       $scope.$storage.students = cloneStudents($scope.clonedStudents);
     };
@@ -112,6 +119,6 @@ angular.module('App', ['gradingFilters', 'ngStorage'])
       if (event.keyCode == 13) {
         $scope.$storage.students = cloneStudents($scope.clonedStudents);
       }
-    }
+    };
 
   }]);
